@@ -1,0 +1,3 @@
+nodes_visited,nodes_expanded,max_depth_reached,simulations,tree_size,algorithm,parameter,repetition,seed,execution_time_ms,peak_memory_bytes,scenario
+365,100,4,100,101,mcts,100,0,42,22.8677,93400,midgame
+365,100,4,100,101,mcts,100,1,43,22.5349,92472,midgame

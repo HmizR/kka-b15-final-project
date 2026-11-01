@@ -102,7 +102,7 @@ def test_evaluate_terminal_perspective_white():
     board = _build_full_board(40, 24)
     black_val = evaluate(board, BLACK)
     white_val = evaluate(board, WHITE)
-    assert white_val == pytest.approx(-black_val + 2 * 16 - 16)  
+    assert white_val == pytest.approx(-black_val)  
     assert black_val > 0
     assert white_val < 0
 
