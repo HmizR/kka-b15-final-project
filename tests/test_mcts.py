@@ -84,6 +84,9 @@ def test_stats_fields():
     assert stats['simulations'] == 100
     assert 2 <= stats['tree_size'] <= 101
     assert stats['nodes_expanded'] == stats['tree_size'] - 1
+    assert {'nodes_visited', 'nodes_expanded', 'max_depth_reached'} <= set(stats)
+    assert stats['nodes_visited'] >= stats['simulations']
+    assert 1 <= stats['max_depth_reached'] <= 100
 
 def test_at_most_one_new_node_per_iteration():
     for n in (1, 2, 10, 123):
@@ -92,7 +95,7 @@ def test_at_most_one_new_node_per_iteration():
         assert stats['tree_size'] == n + 1
 
 def test_visit_counts_consistent():
-    root, sims, size = m._run(flat(initial_board()), BLACK, 400, random.Random(0), m.EXPLORATION_CONSTANT)
+    root, sims, size, _ = m._run(flat(initial_board()), BLACK, 400, random.Random(0), m.EXPLORATION_CONSTANT)
     assert root.visits == sims == 400
     assert sum((ch.visits for ch in root.children)) == root.visits
     count, stack = (0, [root])
@@ -117,7 +120,7 @@ def test_final_move_ties_choose_smallest_coordinate():
 
 def test_unvisited_root_children_have_zero_visits_and_lose_to_visited():
     board = initial_board()
-    root, _, _ = m._run(flat(board), BLACK, 2, random.Random(0), m.EXPLORATION_CONSTANT)
+    root, _, _, _ = m._run(flat(board), BLACK, 2, random.Random(0), m.EXPLORATION_CONSTANT)
     assert len(root.children) == 2 and len(root.untried) == 2
     sq, _ = m._choose_move(root)
     assert sq in {ch.move for ch in root.children}
@@ -187,7 +190,7 @@ def test_pass_nodes_keep_board_and_switch_player():
     found = 0
     for seed in range(12):
         board, player = late_game_board(seed, empties=8)
-        root, _, _ = m._run(flat(board), player, 300, random.Random(seed), m.EXPLORATION_CONSTANT)
+        root, _, _, _ = m._run(flat(board), player, 300, random.Random(seed), m.EXPLORATION_CONSTANT)
         stack = [root]
         while stack:
             node = stack.pop()
@@ -224,3 +227,24 @@ def test_prefers_winning_move_near_endgame(seed):
     best_value = max(values.values())
     move, _ = get_best_move(board, player, iterations=1000, seed=seed)
     assert values[move[0] * 8 + move[1]] == best_value
+
+def test_none_as_empty_cell_is_accepted_and_equivalent():
+    board = initial_board()
+    with_none = [[None if cell == EMPTY else cell for cell in row] for row in board]
+    assert get_best_move(with_none, BLACK, iterations=100, seed=4) == get_best_move(board, BLACK, iterations=100, seed=4)
+
+def test_grid_attribute_is_accepted():
+
+    class Holder:
+        grid = initial_board()
+    assert get_best_move(Holder(), BLACK, iterations=50, seed=2) == get_best_move(initial_board(), BLACK, iterations=50, seed=2)
+
+def test_unknown_cell_value_raises():
+    board = initial_board()
+    board[0][0] = 'B'
+    with pytest.raises(ValueError):
+        get_best_move(board, BLACK, iterations=10, seed=0)
+
+def test_bad_board_shape_raises():
+    with pytest.raises(ValueError):
+        get_best_move([[EMPTY] * 8 for _ in range(7)], BLACK, iterations=10, seed=0)
