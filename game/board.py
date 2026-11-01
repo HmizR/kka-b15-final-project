@@ -1,8 +1,19 @@
+"""Papan Othello dan API list-of-lists untuk integrasi."""
+
+EMPTY = 0
+BLACK = 1
+WHITE = -1
+BOARD_SIZE = 8
+Move = tuple[int, int]
+BoardState = list[list[int]]
+
+
 class Board:
+    """Pembungkus papan untuk antarmuka GameEngine yang sudah ada."""
     SIZE = 8
-    EMPTY = None 
-    BLACK = "B" 
-    WHITE = "W"
+    EMPTY = EMPTY
+    BLACK = BLACK
+    WHITE = WHITE
 
     # Untuk Arah Pemeriksaan
     DIRECTIONS = [
@@ -12,7 +23,8 @@ class Board:
     ]
 
     # Membuat papan kosong 8 x 8
-    def __init__(self):
+    def __init__(self) -> None:
+        """Buat posisi awal Othello."""
         self.grid = [[self.EMPTY for _ in range(self.SIZE)] for _ in range (self.SIZE) ]
 
         # posisi awal dari permainan othello
@@ -23,12 +35,14 @@ class Board:
 
 
     # Memeriksa apakah koordinat berada di dalam papan
-    def is_inside(self, row, col):
+    def is_inside(self, row: int, col: int) -> bool:
+        """Periksa batas koordinat papan."""
         return ( 0 <= row < self.SIZE and 0 <= col < self.SIZE)
 
 
     # Membalik warna lawan
-    def get_opponent(self, player):
+    def get_opponent(self, player: int) -> int:
+        """Kembalikan lawan atau tolak pemain tidak valid."""
         if player == self.BLACK:
             return self.WHITE
         if player == self.WHITE:
@@ -36,13 +50,14 @@ class Board:
         raise ValueError("Player Tidak Valid")
 
     # Mencari seluruh bidak yang warnanya bisa dibalik
-    def get_captured_discs(self, row, col, player):
+    def get_captured_discs(self, row: int, col: int, player: int) -> list[Move]:
+        """Temukan seluruh flip, terurut berdasarkan koordinat."""
+        opponent = self.get_opponent(player)
         if not self.is_inside(row,col):
             return []
-        if self.grid[row][col] is not self.EMPTY:
+        if self.grid[row][col] != self.EMPTY:
             return []
 
-        opponent = self.get_opponent(player)
         captured = []
 
         for dr, dc in self.DIRECTIONS:
@@ -60,17 +75,17 @@ class Board:
             # Bidak lawan harus diakhiri dengan bidak sendiri (Menjepit)
             if (direction_captured and self.is_inside(r,c) and self.grid[r][c] == player):
                 captured.extend(direction_captured)
-        return captured
+        return sorted(captured)
 
     # Memeriksa apakah langkah pemain valid atau tidak
-    def is_valid_move(self, row, col, player):
-        if player not in (self.BLACK, self.WHITE):
-            return False
-
+    def is_valid_move(self, row: int, col: int, player: int) -> bool:
+        """Periksa legalitas langkah; pemain tidak valid ditolak."""
         return len(self.get_captured_discs(row,col,player)) > 0
 
     # Mengambil semua langkah yang valid
-    def get_valid_moves(self, player):
+    def get_valid_moves(self, player: int) -> list[Move]:
+        """Kembalikan langkah legal dalam urutan koordinat."""
+        self.get_opponent(player)
         valid_moves = []
 
 
@@ -81,7 +96,11 @@ class Board:
         return valid_moves
 
     # Menempatkan bidak dan membalik bidak lawan.
-    def apply_move(self, row, col, player):
+    def apply_move(self, row: int, col: int, player: int) -> list[Move]:
+        """Ubah instance ini dan kembalikan flip untuk GameEngine lama.
+
+        API fungsional game.engine.apply_move mengembalikan salinan papan.
+        """
         if not self.is_valid_move(row, col, player):
             raise ValueError("Langkah Anda Tidak Valid")
 
@@ -97,7 +116,8 @@ class Board:
         return captured
 
     # Menghitung score melalui bidak (hitam atau putih) pemain
-    def get_score(self):
+    def get_score(self) -> dict[int, int]:
+        """Kembalikan skor per warna untuk antarmuka kelas lama."""
         black_score = 0
         white_score = 0
 
@@ -111,19 +131,38 @@ class Board:
         return {self.BLACK : black_score, self.WHITE: white_score }
 
     # Memeriksa apakah papan sudah penuh?
-    def is_full(self):
-        return all(cell is not self.EMPTY for row in self.grid for cell in row)
+    def is_full(self) -> bool:
+        """Periksa apakah semua kotak terisi."""
+        return all(cell != self.EMPTY for row in self.grid for cell in row)
 
     # Menampilkan papan ke terminal
-    def display(self):
+    def display(self) -> None:
+        """Tampilkan papan bila diminta secara eksplisit."""
         print("  0 1 2 3 4 5 6 7")
         for i, row in enumerate(self.grid):
             print(i , end=" ")
 
             for cell in row:
-                print (cell if cell else ".", end=" ")
+                print ({self.BLACK: "B", self.WHITE: "W", self.EMPTY: "."}[cell], end=" ")
 
             print()
+
+    @classmethod
+    def from_grid(cls, grid: BoardState) -> "Board":
+        """Bungkus grid tanpa menyalin; pemanggil menentukan kepemilikannya."""
+        instance = cls.__new__(cls)
+        instance.grid = grid
+        return instance
+
+
+def create_board() -> BoardState:
+    """Kembalikan papan awal 8x8 berisi 0, 1, dan -1."""
+    return Board().grid
+
+
+def copy_board(board: BoardState) -> BoardState:
+    """Salin papan beserta barisnya agar perubahan tidak memengaruhi asal."""
+    return [row[:] for row in board]
 
 
 
