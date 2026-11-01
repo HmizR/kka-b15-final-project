@@ -214,13 +214,17 @@ def _choose_move(root: MCTSNode) -> Tuple[Optional[int], float]:
     best = max(legal, key=lambda sq: (visits.get(sq, 0), -sq))
     return (best, value.get(best, 0.0))
 
-def get_best_move(board: Sequence[Sequence[int]], player: int, iterations: int=1000, seed: Optional[int]=None, exploration: float=EXPLORATION_CONSTANT) -> Tuple[Optional[Move], Dict[str, int]]:
+def get_best_move(board: Sequence[Sequence[int]], player: int, iterations: int=500, seed: Optional[int]=None) -> Tuple[Optional[Move], Dict[str, int]]:
+    """Pilih langkah MCTS dan statistik tanpa mengubah papan; None jika pass.
+
+    Gunakan iterations >= 1, seed lokal, dan konstanta UCT sqrt(2).
+    """
     if isinstance(iterations, bool) or not isinstance(iterations, int) or iterations < 1:
         raise ValueError('iterations harus integer >= 1')
     if player not in _OPPONENT:
         raise ValueError('player harus BLACK atau WHITE')
     rng = random.Random(seed)
-    root, simulations, tree_size, nodes_visited = _run(_to_flat(board), player, iterations, rng, exploration)
+    root, simulations, tree_size, nodes_visited = _run(_to_flat(board), player, iterations, rng, EXPLORATION_CONSTANT)
     sq, _ = _choose_move(root)
     stats: Dict[str, int] = {'nodes_visited': nodes_visited, 'nodes_expanded': tree_size - 1, 'max_depth_reached': _tree_depth(root), 'simulations': simulations, 'tree_size': tree_size}
     move = None if sq is None else divmod(sq, _N)

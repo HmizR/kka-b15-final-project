@@ -163,29 +163,3 @@ def create_board() -> BoardState:
 def copy_board(board: BoardState) -> BoardState:
     """Salin papan beserta barisnya agar perubahan tidak memengaruhi asal."""
     return [row[:] for row in board]
-
-
-# ---------------------------------------------------------------------------
-# API fungsional untuk algoritma AI dan eksperimen (alphabeta, mcts, benchmark,
-# tournament). Papan = list[list[int]]: kosong 0, hitam 1, putih -1.
-# Class Board di atas tidak diubah dan tetap dipakai oleh GameEngine / GUI.
-# ---------------------------------------------------------------------------
-EMPTY = 0
-BLACK = 1
-WHITE = -1
-SIZE = Board.SIZE
-
-
-# Membuat papan awal Othello sebagai list of list integer
-def create_board():
-    board = [[EMPTY for _ in range(SIZE)] for _ in range(SIZE)]
-    board[3][3] = WHITE
-    board[3][4] = BLACK
-    board[4][3] = BLACK
-    board[4][4] = WHITE
-    return board
-
-
-# Menyalin papan (list of list) agar perubahan pada salinan tidak memengaruhi papan asli
-def copy_board(board):
-    return [row[:] for row in board]
