@@ -1,0 +1,333 @@
+{
+  "started_at": "2026-11-01T23:50:15+07:00",
+  "timezone": "Asia/Bangkok",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel(R) Core(TM) i7-14700HX",
+  "logical_processors": 28,
+  "physical_memory_bytes": 34049327104,
+  "python": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "streamlit": "1.66.1",
+    "pandas": "3.1.0",
+    "pytest": "9.2.0"
+  },
+  "git_head": "b5d71433d63c3044ab2d27e5897d8a06044f605e",
+  "source_sha256": {
+    "algorithms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "algorithms/alphabeta.py": "c0dc5f35e83f2ef79e14814e00ef0aebff6d86d04c02e540830a818ce88dd520",
+    "algorithms/evaluation.py": "cbdc61da37ef9030f882d7025090a20da1397784d2aef610bd360255d70f5f16",
+    "algorithms/mcts.py": "85da38b30fec276fea7c64ff4d140b71482af1ae0f52dc29bea6b76aa68f73bc",
+    "experiments/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/benchmark.py": "64d086a28685dab497b2d622ab248a70f37a3c569617d5c529db9a8618cc793c",
+    "experiments/common.py": "63d93911bc605304406e19e5364e395358ea7d68696947effddd573dc4be37d3",
+    "experiments/scenarios.py": "dae7c8c828abf866c9a2495246d6a520398a2b910bf5c43bb310bbef94249d1e",
+    "experiments/tournament.py": "eb225f9c19f260843fb9ed4ef8015804ecae99f9f3d26b918c8c825e13f85731",
+    "experiments/ui.py": "cb469d8f67d0c7c6c13233d3565a514da906835baf69e3e1882761f2c0456cea",
+    "game/__init__.py": "4444e6415e688f8c7918649c5a70ae579a0ced4a795b8665a572db66412dfadf",
+    "game/board.py": "81d1bb9957d3d1741bff4582833ef9e64d66399dfb9af097364f06c85a498bc5",
+    "game/engine.py": "557209df627b1b19307e7bf3d8d8616758c95e66c038339b4406db7fc9f688cc",
+    "app.py": "92db056e202bc7e4a5310efd5369282e7738b84509d47256fb888ce92f66105a",
+    "requirements.txt": "81aebfa35323a998c6548f267609d8f24ed5308dc950635ba2c0f37de7bc4bc0"
+  },
+  "method": {
+    "serial": true,
+    "scenario": "midgame",
+    "repetitions_per_algorithm": 30,
+    "alphabeta_depth": 4,
+    "mcts_iterations": 500,
+    "seed": 42,
+    "benchmark_algorithm_order": [
+      "alphabeta",
+      "mcts"
+    ],
+    "tournament_pairs": 1,
+    "time": "perf_counter_ns",
+    "memory": "tracemalloc peak allocated Python bytes",
+    "warmup": false,
+    "gc_policy": "Python default; no explicit collect or disable"
+  },
+  "execution_notes": "Single serial Python process. Tournament starts after benchmark tracing stops. Power mode, CPU temperature and other application activity are not controlled.",
+  "scenario": {
+    "board": [
+      [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        -1,
+        -1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "player": -1,
+    "moves": [
+      [
+        1,
+        [
+          2,
+          3
+        ]
+      ],
+      [
+        -1,
+        [
+          2,
+          2
+        ]
+      ],
+      [
+        1,
+        [
+          2,
+          1
+        ]
+      ],
+      [
+        -1,
+        [
+          1,
+          1
+        ]
+      ],
+      [
+        1,
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        -1,
+        [
+          0,
+          0
+        ]
+      ],
+      [
+        1,
+        [
+          3,
+          2
+        ]
+      ],
+      [
+        -1,
+        [
+          0,
+          2
+        ]
+      ],
+      [
+        1,
+        [
+          1,
+          2
+        ]
+      ],
+      [
+        -1,
+        [
+          1,
+          3
+        ]
+      ],
+      [
+        1,
+        [
+          0,
+          3
+        ]
+      ],
+      [
+        -1,
+        [
+          0,
+          4
+        ]
+      ],
+      [
+        1,
+        [
+          1,
+          0
+        ]
+      ],
+      [
+        -1,
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        1,
+        [
+          4,
+          5
+        ]
+      ],
+      [
+        -1,
+        [
+          1,
+          4
+        ]
+      ],
+      [
+        1,
+        [
+          0,
+          5
+        ]
+      ],
+      [
+        -1,
+        [
+          0,
+          6
+        ]
+      ],
+      [
+        -1,
+        [
+          1,
+          5
+        ]
+      ],
+      [
+        -1,
+        [
+          2,
+          4
+        ]
+      ],
+      [
+        -1,
+        [
+          4,
+          1
+        ]
+      ],
+      [
+        1,
+        [
+          3,
+          1
+        ]
+      ],
+      [
+        -1,
+        [
+          4,
+          0
+        ]
+      ],
+      [
+        1,
+        [
+          3,
+          0
+        ]
+      ]
+    ]
+  },
+  "stages": [
+    {
+      "name": "alphabeta",
+      "started_at": "2026-11-01T23:50:15+07:00",
+      "finished_at": "2026-11-01T23:50:17+07:00"
+    },
+    {
+      "name": "mcts",
+      "started_at": "2026-11-01T23:50:17+07:00",
+      "finished_at": "2026-11-01T23:51:34+07:00"
+    },
+    {
+      "name": "tournament",
+      "started_at": "2026-11-01T23:51:34+07:00",
+      "finished_at": "2026-11-01T23:51:55+07:00"
+    }
+  ],
+  "finished_at": "2026-11-01T23:51:55+07:00",
+  "outputs": {
+    "results/benchmark.csv": {
+      "sha256": "f253419cf06894ee2b4fbad70be9dd17896ef5e7e14e1860b91ca6a483cdd1be",
+      "rows": 60
+    },
+    "results/tournament.csv": {
+      "sha256": "20a71158abdcada1a5a7aacae6ad9c4d3a4d949fc50dc774c6e5b8aa1f6f6901",
+      "rows": 2
+    }
+  }
+}

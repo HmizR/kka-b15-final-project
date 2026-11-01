@@ -6,6 +6,11 @@ def main() -> None:
     """Render the board and process only explicitly requested AI turns."""
     import streamlit as st
     st.set_page_config(page_title="Othello AI", page_icon="⚫")
+    page = st.sidebar.radio("Halaman", ["Permainan", "Eksperimen"], key="page")
+    if page == "Eksperimen":
+        from experiments.ui import render_experiments
+        render_experiments()
+        return
     st.title("Othello — Adversarial Search")
     try:
         from game.board import create_board

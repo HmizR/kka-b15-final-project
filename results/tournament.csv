@@ -1,3 +1,3 @@
 game,pair,black_algorithm,white_algorithm,depth,iterations,mcts_seed,seed_policy,winner,winner_algorithm,black_score,white_score,moves,duration_seconds
-0,0,alphabeta,mcts,2,100,42,game_seed + mcts_decision_index,1,alphabeta,50,14,60,0.4793075
-1,0,mcts,alphabeta,2,100,42,game_seed + mcts_decision_index,-1,alphabeta,12,52,60,0.4834227
+0,0,alphabeta,mcts,4,500,42,game_seed + mcts_decision_index,1,alphabeta,52,12,60,10.4163265
+1,0,mcts,alphabeta,4,500,42,game_seed + mcts_decision_index,-1,alphabeta,12,52,60,10.8275099
