@@ -32,7 +32,7 @@ class TestGameEngine(unittest.TestCase):
 
     # Menguji langkah yang diperbolehkan
     def test_valid_moves(self):
-        self.assertTrue(self.game.board.is_valid_move())
+        self.assertTrue(self.game.board.is_valid_move(2,3,Board.BLACK))
 
     # Menguji langkah yang tidak boleh
     def test_invalid_move(self):
