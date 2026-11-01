@@ -1,4 +1,4 @@
-class board:
+class Board:
     SIZE = 8
     EMPTY = None 
     BLACK = "B" 
@@ -13,7 +13,7 @@ class board:
 
     # Membuat papan kosong 8 x 8
     def __init__(self):
-        self.grid = [[self.EMPTY for _ in range] for _ in range (self.SIZE) ]
+        self.grid = [[self.EMPTY for _ in range(self.SIZE)] for _ in range (self.SIZE) ]
 
         # posisi awal dari permainan othello
         self.grid[3][3] = self.WHITE
@@ -42,7 +42,7 @@ class board:
         if self.grid[row][col] is not self.EMPTY:
             return []
 
-        opponent = self.get_opponent
+        opponent = self.get_opponent(player)
         captured = []
 
         for dr, dc in self.DIRECTIONS:
@@ -52,7 +52,7 @@ class board:
             direction_captured = []
 
             # Mencari bidak lawan secara berurutan
-            while(self.is_inside(r,c) and self.grid == opponent):
+            while(self.is_inside(r,c) and self.grid[r][c] == opponent):
                 direction_captured.append((r,c))
                 r += dr
                 c += dc
@@ -67,7 +67,7 @@ class board:
         if player not in (self.BLACK, self.WHITE):
             return False
 
-        return len(self.get_captured_disc(row,col,player)) > 0
+        return len(self.get_captured_discs(row,col,player)) > 0
 
     # Mengambil semua langkah yang valid
     def get_valid_moves(self, player):

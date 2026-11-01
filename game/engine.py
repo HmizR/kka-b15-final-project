@@ -31,15 +31,15 @@ class GameEngine:
         captured = self.board.apply_move(row, col, self.current_player)
 
         # pergantian giliran
-        self.current_player = self.boad.get_opponent(self.current_player)
+        self.current_player = self.board.get_opponent(self.current_player)
 
         return captured
 
     # Memeriksa apakah pemain saat ini harus pass.
     def must_pass(self):
-        if self.is_game_over:
+        if self.is_game_over():
             return False
-
+        
         return len(self.get_valid_moves()) == 0
 
     # Melewati giliran jika tidak ada langkah valid
@@ -50,6 +50,7 @@ class GameEngine:
         if not self.must_pass():
             raise ValueError("Pemain masih memiliki langkah valid!")
         
+        self.current_player = self.board.get_opponent(self.current_player)
     
 
     # Menentukan pemenang berdasarkan jumlah bidak

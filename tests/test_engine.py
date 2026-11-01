@@ -20,7 +20,7 @@ class TestGameEngine(unittest.TestCase):
 
     # Menguji langkah valid pada awal permainan
     def test_initial_valid_moves(self):
-        moves = self.game.get_valid_moves
+        moves = self.game.get_valid_moves()
 
         expected = [ 
             (2, 3),
@@ -32,7 +32,7 @@ class TestGameEngine(unittest.TestCase):
 
     # Menguji langkah yang diperbolehkan
     def test_valid_moves(self):
-        self.asserTrue(self.game.board.is_valid_move())
+        self.assertTrue(self.game.board.is_valid_move())
 
     # Menguji langkah yang tidak boleh
     def test_invalid_move(self):
@@ -51,7 +51,7 @@ class TestGameEngine(unittest.TestCase):
 
     # Menguji penolakan langkah ilegal
     def test_invalid_moves_raise_error(self):
-        with self.assertraise(ValueError):
+        with self.assertRaises(ValueError):
             self.game.play_move(0,0)
 
     # Menguji kondisi awal permainan
@@ -79,7 +79,7 @@ class TestGameEngine(unittest.TestCase):
 
         self.game.pass_turn()
 
-        self.assertEqual((self.game.get_current_player), Board.WHITE)
+        self.assertEqual((self.game.get_current_player()), Board.WHITE)
 
     # Menguji permainan ketika papan penuh
     def test_game_over_full_board(self):
@@ -88,7 +88,7 @@ class TestGameEngine(unittest.TestCase):
         self.assertTrue(self.game.is_game_over())
         self.assertEqual(self.game.get_winner(), Board.BLACK)
 
-    if __name__ == "__main__":
+if __name__ == "__main__":
         unittest.main()
 
 
