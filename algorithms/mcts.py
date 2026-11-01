@@ -14,9 +14,21 @@ _PASS = -1
 _OPPONENT = {BLACK: WHITE, WHITE: BLACK}
 
 def _to_flat(board: Sequence[Sequence[int]]) -> List[int]:
-    if len(board) != _N or any((len(row) != _N for row in board)):
+    rows = getattr(board, 'grid', board)
+    if len(rows) != _N or any((len(row) != _N for row in rows)):
         raise ValueError(f'board harus berukuran {_N}x{_N}')
-    return [cell for row in board for cell in row]
+    flat: List[int] = []
+    for row in rows:
+        for cell in row:
+            if cell == BLACK:
+                flat.append(BLACK)
+            elif cell == WHITE:
+                flat.append(WHITE)
+            elif cell is None or cell == EMPTY:
+                flat.append(EMPTY)
+            else:
+                raise ValueError(f'nilai sel tidak dikenal: {cell!r}')
+    return flat
 
 def _build_rays() -> List[List[Tuple[int, ...]]]:
     directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
@@ -169,24 +181,29 @@ def _tree_depth(root: MCTSNode) -> int:
         stack.extend(((ch, d + 1) for ch in node.children))
     return depth
 
-def _run(flat_board: List[int], player: int, iterations: int, rng: random.Random, c: float) -> Tuple[MCTSNode, int, int]:
+def _run(flat_board: List[int], player: int, iterations: int, rng: random.Random, c: float) -> Tuple[MCTSNode, int, int, int]:
     root = MCTSNode(flat_board, player, mover=_OPPONENT[player])
     tree_size = 1
     simulations = 0
+    nodes_visited = 0
     if not root.untried or root.untried == [_PASS]:
-        return (root, simulations, tree_size)
+        return (root, simulations, tree_size, nodes_visited)
     for _ in range(iterations):
         node = root
+        path_length = 1
         while not node.untried and node.children:
             node = _best_uct_child(node, c)
+            path_length += 1
         if node.untried:
             move = node.untried.pop(rng.randrange(len(node.untried)))
             node = node.expand(move)
             tree_size += 1
+            path_length += 1
+        nodes_visited += path_length
         final_board = _rollout(node.board, node.player, rng)
         simulations += 1
         _backpropagate(node, final_board)
-    return (root, simulations, tree_size)
+    return (root, simulations, tree_size, nodes_visited)
 
 def _choose_move(root: MCTSNode) -> Tuple[Optional[int], float]:
     visits: Dict[int, int] = {ch.move: ch.visits for ch in root.children}
@@ -197,14 +214,14 @@ def _choose_move(root: MCTSNode) -> Tuple[Optional[int], float]:
     best = max(legal, key=lambda sq: (visits.get(sq, 0), -sq))
     return (best, value.get(best, 0.0))
 
-def get_best_move(board: Sequence[Sequence[int]], player: int, iterations: int=1000, seed: Optional[int]=None, exploration: float=EXPLORATION_CONSTANT) -> Tuple[Optional[Move], Dict[str, float]]:
+def get_best_move(board: Sequence[Sequence[int]], player: int, iterations: int=1000, seed: Optional[int]=None, exploration: float=EXPLORATION_CONSTANT) -> Tuple[Optional[Move], Dict[str, int]]:
     if isinstance(iterations, bool) or not isinstance(iterations, int) or iterations < 1:
         raise ValueError('iterations harus integer >= 1')
     if player not in _OPPONENT:
         raise ValueError('player harus BLACK atau WHITE')
     rng = random.Random(seed)
-    root, simulations, tree_size = _run(_to_flat(board), player, iterations, rng, exploration)
-    sq, best_value = _choose_move(root)
-    stats: Dict[str, float] = {'nodes_expanded': tree_size - 1, 'max_depth': _tree_depth(root), 'best_value': best_value, 'simulations': simulations, 'tree_size': tree_size}
+    root, simulations, tree_size, nodes_visited = _run(_to_flat(board), player, iterations, rng, exploration)
+    sq, _ = _choose_move(root)
+    stats: Dict[str, int] = {'nodes_visited': nodes_visited, 'nodes_expanded': tree_size - 1, 'max_depth_reached': _tree_depth(root), 'simulations': simulations, 'tree_size': tree_size}
     move = None if sq is None else divmod(sq, _N)
     return (move, stats)
