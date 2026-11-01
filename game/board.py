@@ -184,3 +184,8 @@ def create_board():
     board[4][3] = BLACK
     board[4][4] = WHITE
     return board
+
+
+# Menyalin papan (list of list) agar perubahan pada salinan tidak memengaruhi papan asli
+def copy_board(board):
+    return [row[:] for row in board]
